@@ -1,0 +1,87 @@
+body {
+    background-color: gray;
+    background-image: url(https://images8.alphacoders.com/132/1325725.png);
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  .body-container{
+    text-align: center;
+
+
+  }
+  .centered {
+    text-align: center;
+    font-size: 25px;
+    font-family: 'Pacifico', cursive;
+    color: white;
+    margin-top: 210px;
+    
+  }
+  .text {
+    text-align: center; 
+    font-size: 18px; 
+    font-family: 'Pacifico', cursive;
+    color: white;
+    display: block;
+    max-width: 600px;
+    margin: auto;
+    line-height: 1.4;
+  }
+  
+
+.imagem{
+    height: 350px;
+    width: auto;
+    border-radius: 10%;
+    border: 2px solid white;
+    display: block;
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.footer {
+    position: fixed; 
+    bottom: 0; 
+    left: 0; 
+    width: 100%; 
+    padding: 10px; 
+    text-align: center; 
+    
+}
+  
+
+.icon-container {
+    display: inline-block;
+    border: 1px solid white;
+    background-image: url(https://i.pinimg.com/564x/f1/0b/07/f10b0719113f31b4e2bdd3dfd6e80aa7.jpg);
+    
+    border-radius: 20%;
+    padding: 15px; 
+  }
+  
+  .icon-container img {
+    width: 50px; 
+    height: auto; 
+    margin: 0 20px; 
+  }
+
+.footertext{
+    position: fixed; 
+    bottom: 82px; 
+    left: 50%; 
+    transform: translateX(-50%); 
+    text-align: center; 
+    padding: 10px; 
+    font-size: 18px;
+    font-family: 'Pacifico',cursive;
+    color: white;
+    
+}
