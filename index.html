@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricernot — VTuber • Streamer</title>
+    <meta name="description" content="Olá eu sou Price! Vtuber e Streamer. Lives de Terça a Sexta às 19h (BRT) e Segunda live exclusiva para membros às 19h. Links oficiais e contato." />
+    <meta name="theme-color" content="#0b0f1a" />
+
+    <meta property="og:title" content="Pricernot" />
+    <meta property="og:description" content="Olá eu sou Price! Vtuber e Streamer — links oficiais, agenda e contato." />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="./img/price.png" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <script>
+        (() => {
+            const params = new URLSearchParams(window.location.search);
+            const entered = params.get('entered') === '1';
+
+            // Requirement: F5 / direct open must return to splash.
+            // Only allow index when coming from splash (entered=1).
+            if (!entered) {
+                window.location.replace('./splash.html');
+                return;
+            }
+
+            // Mark arrival for a soft fade-in.
+            document.documentElement.classList.add('from-splash');
+
+            // Clean URL so refresh sends user back to splash.
+            params.delete('entered');
+            const cleanQuery = params.toString();
+            const cleanUrl = window.location.pathname + (cleanQuery ? `?${cleanQuery}` : '') + window.location.hash;
+            window.history.replaceState(null, '', cleanUrl);
+        })();
+    </script>
+
+    <script>
+        document.documentElement.classList.add('js');
+    </script>
+
+    <link rel="stylesheet" href="doc.css">
+    <link rel="icon" type="image/x-icon" href="./img/coração112.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+    <header class="site-header">
+        <div class="container header-inner">
+            <a class="brand" href="#top" aria-label="Ir para o topo">
+                <span class="brand-mark" aria-hidden="true"></span>
+                <span class="brand-text">PRICERNOT</span>
+            </a>
+
+            <button class="nav-toggle" type="button" data-nav-toggle aria-controls="site-nav" aria-expanded="false">
+                <span class="sr-only">Abrir menu</span>
+                <span class="nav-toggle-bars" aria-hidden="true"></span>
+            </button>
+
+            <nav class="site-nav" id="site-nav" aria-label="Navegação principal" data-nav>
+                <a href="#sobre">Sobre</a>
+                <a href="#links">Links</a>
+                <a href="#agenda">Agenda</a>
+                <a href="#projeto">Projeto</a>
+                <a href="#contato">Contato</a>
+            </nav>
+        </div>
+    </header>
+
+    <main id="top">
+        <section class="hero" id="conteudo">
+            <div class="container">
+                <div class="hero-content">
+                    <div class="hero-text">
+                        <p class="hero-label">Olá eu sou Price! VTuber e Streamer</p>
+                        <h1 class="hero-title">Pricernot</h1>
+                        <p class="hero-subtitle">Portal infos com links oficiais, agenda das lives e contato.</p>
+
+                        <div class="hero-actions">
+                            <a class="btn btn-primary" href="https://www.twitch.tv/pricernot" target="_blank" rel="noopener noreferrer">Assistir na Twitch</a>
+                            <a class="btn btn-ghost" href="https://discord.gg/servidor-do-pricernot-759631750795624458" target="_blank" rel="noopener noreferrer">Entrar no Discord</a>
+                        </div>
+                    </div>
+
+                    <div class="hero-visual">
+                        <div class="hero-image-container">
+                            <div class="hero-glow"></div>
+                            <img src="./img/price.png" alt="Pricernot" class="hero-image" loading="eager" decoding="async">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section section-info">
+            <div class="container">
+                <div class="info-grid">
+                    <div class="info-card">
+                        <div class="info-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                        </div>
+                        <div class="info-content">
+                            <p class="info-label">Lives</p>
+                            <p class="info-value">Ter–Sex às 19h (BRT)</p>
+                        </div>
+                    </div>
+
+                    <div class="info-card">
+                        <div class="info-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                        </div>
+                        <div class="info-content">
+                            <p class="info-label">Membros</p>
+                            <p class="info-value">Segunda às 19h (exclusiva)</p>
+                        </div>
+                    </div>
+
+                    <div class="info-card info-card-highlight">
+                        <div class="info-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                        </div>
+                        <div class="info-content">
+                            <p class="info-label">Atalhos</p>
+                            <div class="quick-links">
+                                <a href="https://skieshop.com.br/vtuber/pricernot" target="_blank" rel="noopener noreferrer">Loja</a>
+                                <span>•</span>
+                                <a href="https://whatsapp.com/channel/0029VaiknWuCsU9TgkEjt31" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="sobre">
+            <div class="container">
+                <div class="section-head">
+                    <h2 class="section-title">Sobre</h2>
+                    <p class="section-desc">Um resumo rápido pra dar rosto (e história) ao projeto.</p>
+                </div>
+
+                <div class="grid-2">
+                    <div class="panel">
+                        <h3 class="panel-title">Descrição</h3>
+                        <p class="muted">Olá eu sou Price! Vtuber e Streamer!</p>
+                    </div>
+
+                    <div class="panel">
+                        <h3 class="panel-title">Lore</h3>
+                        <p class="muted">Um jovem com o dom de controlar o tempo em um mundo governado por deuses. Ele tenta manter o equilíbrio, mas ao mudar o curso natural do tempo para evitar uma tragédia, cria consequências inesperadas. Banido do Reino dos Céus, é exilado na Terra e precisa viver como um mortal.</p>
+                    </div>
+                </div>
+
+                <div class="grid-2 mt-4">
+                    <div class="panel">
+                        <h3 class="panel-title">Agenda (resumo)</h3>
+                        <ul class="checklist">
+                            <li>Lives de Terça a Sexta, às 19 horas</li>
+                            <li>Segunda-feira: live exclusiva para membros do canal, também às 19h</li>
+                        </ul>
+                    </div>
+
+                    <div class="panel">
+                        <h3 class="panel-title">Contato</h3>
+                        <p class="muted">E-mail profissional:</p>
+                        <p class="contact-line"><strong>pricernotcontato@gmail.com</strong></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="links">
+            <div class="container">
+                <div class="section-head">
+                    <h2 class="section-title">Links oficiais</h2>
+                    <p class="section-desc">Onde me encontrar — tudo em um só lugar.</p>
+                </div>
+
+                <div class="social-grid" role="list">
+                    <a class="social-card" role="listitem" href="https://skieshop.com.br/vtuber/pricernot" target="_blank" rel="noopener noreferrer">
+                        <img src="./img/store.svg" alt="Loja" width="44" height="44" loading="lazy" decoding="async">
+                        <div>
+                            <p class="social-title">Loja do Price</p>
+                            <p class="social-sub">skieshop.com.br/vtuber/pricernot</p>
+                        </div>
+                        <span class="arrow" aria-hidden="true">→</span>
+                    </a>
+
+                    <a class="social-card" role="listitem" href="https://whatsapp.com/channel/0029VaiknWuCsU9TgkEjt31" target="_blank" rel="noopener noreferrer">
+                        <img src="./img/whatsapp.svg" alt="WhatsApp" width="44" height="44" loading="lazy" decoding="async">
+                        <div>
+                            <p class="social-title">Whatsapp do Price</p>
+                            <p class="social-sub">whatsapp.com/channel/0029VaiknWuCsU9TgkEjt31</p>
+                        </div>
+                        <span class="arrow" aria-hidden="true">→</span>
+                    </a>
+
+                    <a class="social-card" role="listitem" href="https://www.twitch.tv/pricernot" target="_blank" rel="noopener noreferrer">
+                        <img src="./img/twitchlogo.svg" alt="Twitch" width="44" height="44" loading="lazy" decoding="async">
+                        <div>
+                            <p class="social-title">Twitch</p>
+                            <p class="social-sub">Lives e interação</p>
+                        </div>
+                        <span class="arrow" aria-hidden="true">→</span>
+                    </a>
+
+                    <a class="social-card" role="listitem" href="https://discord.gg/servidor-do-pricernot-759631750795624458" target="_blank" rel="noopener noreferrer">
+                        <img src="./img/discord.svg" alt="Discord" width="44" height="44" loading="lazy" decoding="async">
+                        <div>
+                            <p class="social-title">Discord</p>
+                            <p class="social-sub">Comunidade e anúncios</p>
+                        </div>
+                        <span class="arrow" aria-hidden="true">→</span>
+                    </a>
+
+                    <a class="social-card" role="listitem" href="https://x.com/Pricernot" target="_blank" rel="noopener noreferrer">
+                        <img src="./img/twitter.svg" alt="X / Twitter" width="44" height="44" loading="lazy" decoding="async">
+                        <div>
+                            <p class="social-title">X (Twitter)</p>
+                            <p class="social-sub">x.com/Pricernot</p>
+                        </div>
+                        <span class="arrow" aria-hidden="true">→</span>
+                    </a>
+
+                    <a class="social-card" role="listitem" href="https://www.tiktok.com/@pricernot" target="_blank" rel="noopener noreferrer">
+                        <img src="./img/tiktok.svg" alt="TikTok" width="44" height="44" loading="lazy" decoding="async">
+                        <div>
+                            <p class="social-title">TikTok</p>
+                            <p class="social-sub">tiktok.com/@pricernot</p>
+                        </div>
+                        <span class="arrow" aria-hidden="true">→</span>
+                    </a>
+
+                    <a class="social-card" role="listitem" href="https://instagram.com/pricernot" target="_blank" rel="noopener noreferrer">
+                        <img src="./img/instagram.svg" alt="Instagram" width="44" height="44" loading="lazy" decoding="async">
+                        <div>
+                            <p class="social-title">Instagram</p>
+                            <p class="social-sub">instagram.com/pricernot</p>
+                        </div>
+                        <span class="arrow" aria-hidden="true">→</span>
+                    </a>
+
+                    <a class="social-card" role="listitem" href="https://www.youtube.com/channel/UCPBc5GdD4Nk0ly65MYq5QxA" target="_blank" rel="noopener noreferrer">
+                        <img src="./img/youtube.svg" alt="YouTube" width="44" height="44" loading="lazy" decoding="async">
+                        <div>
+                            <p class="social-title">YouTube</p>
+                            <p class="social-sub">Vídeos e cortes</p>
+                        </div>
+                        <span class="arrow" aria-hidden="true">→</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="agenda">
+            <div class="container">
+                <div class="section-head">
+                    <h2 class="section-title">Agenda</h2>
+                    <p class="section-desc">Horários principais (BRT).</p>
+                </div>
+
+                <div class="grid-3">
+                    <div class="panel">
+                        <h3 class="panel-title">Terça a Sexta</h3>
+                        <p class="big">19:00</p>
+                        <p class="muted">Lives regulares</p>
+                    </div>
+                    <div class="panel">
+                        <h3 class="panel-title">Segunda-feira</h3>
+                        <p class="big">19:00</p>
+                        <p class="muted">Live exclusiva para membros</p>
+                    </div>
+                    <div class="panel">
+                        <h3 class="panel-title">Avisos</h3>
+                        <p class="muted">Mudanças e avisos saem no Discord e no WhatsApp.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="projeto">
+            <div class="container">
+                <div class="section-head">
+                    <h2 class="section-title">Projeto</h2>
+                    <p class="section-desc">O que está sendo construído — e o que vem a seguir.</p>
+                </div>
+
+                <div class="grid-2">
+                    <div class="panel">
+                        <h3 class="panel-title">Direção</h3>
+                        <p class="muted">Conteúdo com narrativa, estética forte e presença consistente. A ideia é você bater o olho e entender: quem é, onde vive, e por que acompanhar.</p>
+                        <div class="pill-row" aria-label="Tags do projeto">
+                            <span class="pill">identidade</span>
+                            <span class="pill">comunidade</span>
+                            <span class="pill">lore</span>
+                            <span class="pill">produção</span>
+                        </div>
+                    </div>
+
+                    <div class="panel">
+                        <h3 class="panel-title">Destaques</h3>
+                        <ul class="bullets">
+                            <li>Portal infos (esta página) para centralizar tudo</li>
+                            <li>Seções claras: links, agenda, projeto e contato</li>
+                            <li>Visual moderno, responsivo e leve</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="contato">
+            <div class="container">
+                <div class="section-head">
+                    <h2 class="section-title">Contato</h2>
+                    <p class="section-desc">Parcerias, collabs e propostas.</p>
+                </div>
+
+                <div class="contact panel">
+                    <p class="muted">E-mail profissional:</p>
+                    <p class="contact-line"><strong>Contato:</strong> <a href="mailto:pricernotcontato@gmail.com">pricernotcontato@gmail.com</a></p>
+                    <p class="muted">Também dá pra falar pelo Discord/WhatsApp (links acima).</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-inner">
+            <p class="footer-brand">PRICERNOT</p>
+            <p class="footer-note">Links oficiais e infos do projeto.</p>
+            <a class="to-top" href="#top">Voltar ao topo</a>
+        </div>
+    </footer>
+
+    <script src="./script.js" defer></script>
+</body>
+</html>

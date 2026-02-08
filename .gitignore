@@ -1,0 +1,13 @@
+.DS_Store
+Thumbs.db
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+
+# VS Code
+.vscode/
+
+# Misc
+*.log
