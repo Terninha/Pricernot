@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>◼◼◼◼◼◼◼◼◼</title>
+    <title>Pricernot — Portal</title>
     <meta name="description" content="Explore o espaço-tempo de Pricernot" />
     <meta name="theme-color" content="#000000" />
 
@@ -14,18 +14,25 @@
     <link rel="icon" type="image/x-icon" href="./img/coração112.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="preload" href="./img/splash.mp4" as="video" type="video/mp4">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Video is heavy; let the browser decide (metadata first) to stay friendly on slower networks. -->
     <link rel="stylesheet" href="splash.css">
+    
+    <noscript>
+        <style>
+            .threshold { opacity: 1 !important; transform: none !important; }
+        </style>
+    </noscript>
 </head>
 <body>
     <!-- Video environment -->
-    <video class="void-video" autoplay muted loop playsinline preload="auto" disablepictureinpicture>
-        <source src="./img/splash.mp4" type="video/mp4">
+    <video class="void-video" autoplay muted loop playsinline preload="metadata" disablepictureinpicture>
+        <source src="./img/video-splash.webm" type="video/webm">
+        <source src="./img/video-splash.mp4" type="video/mp4">
     </video>
 
     <!-- Music (starts on user gesture if autoplay is blocked) -->
-    <audio class="splash-audio" preload="auto" loop>
+    <audio class="splash-audio" preload="none" loop>
         <source src="./img/splash-intro.mp3" type="audio/mpeg">
     </audio>
     
@@ -40,24 +47,47 @@
     <div class="scanline" aria-hidden="true"></div>
     
     <!-- Portal threshold -->
-    <div class="threshold">
+    <div class="threshold" role="main" aria-labelledby="splash-heading">
         <div class="threshold-inner">
+            <!-- Time Controller Character (logo acima do texto) -->
+            <div class="time-controller" aria-hidden="true">
+                <img src="./img/character.webp" alt="" class="controller-image" decoding="async">
+                <div class="controller-glow"></div>
+                <div class="watch-glow"></div>
+            </div>
+
+            <!-- Energy Connection -->
+            <div class="energy-flow" aria-hidden="true">
+                <div class="energy-beam"></div>
+                <div class="energy-particles"></div>
+            </div>
+
             <!-- Invitation text -->
-            <h1 class="threshold-text">
+            <h1 id="splash-heading" class="threshold-text">
                 <span class="threshold-line">Explore o espaço-tempo</span>
                 <span class="threshold-line threshold-line--emphasis">de Pricernot</span>
             </h1>
             
             <!-- Subtle passage indicator -->
-            <button class="passage" type="button" aria-label="Entrar">
-                <span class="passage-symbol">◆</span>
-                <span class="passage-label">Entrar</span>
-            </button>
+            <form class="passage-form" action="./index.html" method="get">
+                <input type="hidden" name="entered" value="1">
+                <button class="passage" type="submit" aria-label="Acessar site principal">
+                    <span class="passage-symbol" aria-hidden="true">◆</span>
+                    <span class="passage-label">Entrar</span>
+                </button>
+            </form>
         </div>
     </div>
     
     <!-- Dissolve curtain for transition -->
     <div class="dissolve" aria-hidden="true"></div>
+    
+    <footer class="splash-footer">
+        <div class="splash-footer-inner">
+            <span class="splash-footer-copyright">© 2026 Pricernot. Todos os direitos reservados.</span>
+            <span class="splash-footer-credit">Made by Terninha</span>
+        </div>
+    </footer>
     
     <script src="./splash.js"></script>
 </body>

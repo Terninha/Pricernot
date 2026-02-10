@@ -170,6 +170,349 @@
     });
   };
 
+  // ═══════════════════════════════════════════════════════════════
+  // TABS SYSTEM
+  // ═══════════════════════════════════════════════════════════════
+  // SCROLL PROGRESS INDICATOR
+  // ═══════════════════════════════════════════════════════════════
+  const initScrollProgress = () => {
+    const progressBar = document.querySelector('.scroll-progress');
+    if (!progressBar) return;
+
+    const updateProgress = () => {
+      const docEl = document.documentElement;
+      const scrollTop = window.scrollY || window.pageYOffset;
+      const scrollHeight = docEl.scrollHeight - docEl.clientHeight;
+      const progress = Math.min(Math.max((scrollTop / scrollHeight) * 100, 0), 100);
+      progressBar.style.width = `${progress}%`;
+    };
+
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    window.addEventListener('resize', updateProgress, { passive: true });
+    updateProgress();
+  };
+
+  // ═══════════════════════════════════════════════════════════════
+  // SHOOTING STARS
+  // ═══════════════════════════════════════════════════════════════
+  const initShootingStars = () => {
+    if (prefersReducedMotion) return;
+
+    const container = document.querySelector('.stars-container');
+    if (!container) return;
+
+    const createShootingStar = () => {
+      const star = document.createElement('div');
+      star.className = 'shooting-star';
+      
+      const startX = Math.random() * window.innerWidth;
+      const startY = Math.random() * (window.innerHeight * 0.5);
+      
+      star.style.left = `${startX}px`;
+      star.style.top = `${startY}px`;
+      
+      container.appendChild(star);
+      
+      setTimeout(() => {
+        star.remove();
+      }, 2000);
+    };
+
+    // Create shooting stars periodically
+    setInterval(() => {
+      if (Math.random() > 0.5) {
+        createShootingStar();
+      }
+    }, 8000);
+
+    // Initial star
+    setTimeout(createShootingStar, 2000);
+  };
+
+  // ═══════════════════════════════════════════════════════════════
+  // SCHEDULE COUNTDOWN
+  // ═══════════════════════════════════════════════════════════════
+  const initCountdowns = () => {
+    const countdowns = document.querySelectorAll('.schedule-countdown');
+    if (countdowns.length === 0) return;
+
+    const updateCountdowns = () => {
+      const now = new Date();
+      const brt = new Date(now.toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' }));
+      const dayOfWeek = brt.getDay(); // 0 = Sunday, 1 = Monday, etc.
+      const hours = brt.getHours();
+      const minutes = brt.getMinutes();
+
+      countdowns.forEach((countdown) => {
+        const schedule = countdown.dataset.schedule;
+        let message = '';
+
+        // Reset per tick (no inline styles; state is class-based)
+        countdown.classList.remove('is-live', 'is-live-members');
+
+        if (schedule === 'weekday') {
+          // Tuesday to Friday (2-5)
+          if (dayOfWeek >= 2 && dayOfWeek <= 5) {
+            if (hours < 19) {
+              const hoursLeft = 18 - hours;
+              const minsLeft = 60 - minutes;
+              message = `Em ${hoursLeft}h ${minsLeft}min`;
+            } else if (hours === 19 && minutes < 60) {
+              message = 'AO VIVO';
+              countdown.classList.add('is-live');
+            } else {
+              message = 'Próxima: amanhã 19h';
+            }
+          } else {
+            const daysUntilTuesday = dayOfWeek === 0 ? 2 : dayOfWeek === 1 ? 1 : dayOfWeek === 6 ? 3 : 0;
+            message = daysUntilTuesday > 0 ? `Em ${daysUntilTuesday} dias` : 'Amanhã 19h';
+          }
+        } else if (schedule === 'monday') {
+          if (dayOfWeek === 1) {
+            if (hours < 19) {
+              const hoursLeft = 18 - hours;
+              const minsLeft = 60 - minutes;
+              message = `Em ${hoursLeft}h ${minsLeft}min`;
+            } else if (hours === 19 && minutes < 60) {
+              message = 'AO VIVO (MEMBROS)';
+              countdown.classList.add('is-live-members');
+            } else {
+              message = 'Próxima: segunda 19h';
+            }
+          } else {
+            const daysUntilMonday = dayOfWeek === 0 ? 1 : 7 - dayOfWeek + 1;
+            message = `Em ${daysUntilMonday} dias`;
+          }
+        }
+
+        countdown.textContent = message;
+      });
+    };
+
+    updateCountdowns();
+    setInterval(updateCountdowns, 60000); // Update every minute
+  };
+
+  // ═══════════════════════════════════════════════════════════════
+  // ACTIVE NAV (SCROLLSPY)
+  // ═══════════════════════════════════════════════════════════════
+  const initActiveNav = () => {
+    const nav = document.querySelector('[data-nav]');
+    if (!nav) return;
+
+    const links = Array.from(nav.querySelectorAll('a[href^="#"]'));
+    if (links.length === 0) return;
+
+    const sections = links
+      .map((link) => {
+        const href = link.getAttribute('href') || '';
+        if (!href.startsWith('#') || href === '#') return null;
+        return document.querySelector(href);
+      })
+      .filter((el) => el instanceof HTMLElement);
+
+    if (sections.length === 0) return;
+
+    const setActive = (id) => {
+      links.forEach((link) => {
+        const href = link.getAttribute('href') || '';
+        const targetId = href.startsWith('#') ? href.slice(1) : '';
+        const isActive = targetId && targetId === id;
+        link.classList.toggle('is-active', isActive);
+        if (isActive) link.setAttribute('aria-current', 'page');
+        else link.removeAttribute('aria-current');
+      });
+    };
+
+    // Prefer hash if present
+    if (window.location.hash) {
+      const hashId = window.location.hash.slice(1);
+      setActive(hashId);
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => (b.intersectionRatio || 0) - (a.intersectionRatio || 0));
+
+        if (visible.length === 0) return;
+        const top = visible[0];
+        if (top.target && top.target.id) setActive(top.target.id);
+      },
+      {
+        threshold: [0.12, 0.25, 0.5, 0.75],
+        rootMargin: '-35% 0px -55% 0px'
+      }
+    );
+
+    sections.forEach((section) => observer.observe(section));
+
+    window.addEventListener('hashchange', () => {
+      const id = window.location.hash.slice(1);
+      if (id) setActive(id);
+    });
+  };
+
+  // ═══════════════════════════════════════════════════════════════
+  // BUTTON PARTICLE EFFECTS
+  // ═══════════════════════════════════════════════════════════════
+  const initButtonEffects = () => {
+    const enhancedButtons = document.querySelectorAll('.btn-enhanced');
+    
+    enhancedButtons.forEach((button) => {
+      button.addEventListener('click', (e) => {
+        if (prefersReducedMotion) return;
+
+        const rect = button.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        // Create ripple effect
+        const ripple = document.createElement('span');
+        ripple.style.cssText = `
+          position: absolute;
+          left: ${x}px;
+          top: ${y}px;
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          background: rgba(6, 182, 212, 0.6);
+          transform: translate(-50%, -50%) scale(0);
+          animation: ripple 0.6s ease-out forwards;
+          pointer-events: none;
+        `;
+
+        button.appendChild(ripple);
+
+        setTimeout(() => ripple.remove(), 600);
+      });
+    });
+
+    // Add ripple animation
+    if (!document.getElementById('btn-ripple-style')) {
+      const style = document.createElement('style');
+      style.id = 'btn-ripple-style';
+      style.textContent = `
+        @keyframes ripple {
+          to {
+            transform: translate(-50%, -50%) scale(4);
+            opacity: 0;
+          }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+  };
+
+  // ═══════════════════════════════════════════════════════════════
+  // MOBILE SWIPE GESTURES
+  // ═══════════════════════════════════════════════════════════════
+  const initSwipeGestures = () => {
+    if (window.innerWidth > 720) return;
+
+    const sections = Array.from(document.querySelectorAll('.section[id]'));
+    if (sections.length === 0) return;
+
+    let touchStartY = 0;
+    let touchStartX = 0;
+    let isSwiping = false;
+
+    document.addEventListener('touchstart', (e) => {
+      touchStartY = e.touches[0].clientY;
+      touchStartX = e.touches[0].clientX;
+      isSwiping = true;
+    }, { passive: true });
+
+    document.addEventListener('touchmove', (e) => {
+      if (!isSwiping) return;
+
+      const touchEndY = e.touches[0].clientY;
+      const touchEndX = e.touches[0].clientX;
+      const deltaY = touchStartY - touchEndY;
+      const deltaX = Math.abs(touchStartX - touchEndX);
+
+      // Only handle vertical swipes (not horizontal)
+      if (deltaX > 50) {
+        isSwiping = false;
+        return;
+      }
+
+      // Swipe threshold
+      if (Math.abs(deltaY) > 100) {
+        const currentScrollY = window.scrollY;
+        const viewportHeight = window.innerHeight;
+        
+        // Find current section
+        let currentIndex = -1;
+        sections.forEach((section, index) => {
+          const rect = section.getBoundingClientRect();
+          if (rect.top <= viewportHeight / 2 && rect.bottom > viewportHeight / 2) {
+            currentIndex = index;
+          }
+        });
+
+        if (currentIndex !== -1) {
+          let targetIndex = currentIndex;
+          if (deltaY > 0 && currentIndex < sections.length - 1) {
+            // Swipe up - next section
+            targetIndex = currentIndex + 1;
+          } else if (deltaY < 0 && currentIndex > 0) {
+            // Swipe down - previous section
+            targetIndex = currentIndex - 1;
+          }
+
+          if (targetIndex !== currentIndex) {
+            const targetSection = sections[targetIndex];
+            const header = document.querySelector('.site-header');
+            const headerOffset = header ? header.offsetHeight + 12 : 90;
+            const targetY = targetSection.getBoundingClientRect().top + currentScrollY - headerOffset;
+
+            smoothScrollTo(targetY, 800);
+          }
+        }
+
+        isSwiping = false;
+      }
+    }, { passive: true });
+
+    document.addEventListener('touchend', () => {
+      isSwiping = false;
+    }, { passive: true });
+  };
+
+  // ═══════════════════════════════════════════════════════════════
+  // PAGE TRANSITION EFFECTS
+  // ═══════════════════════════════════════════════════════════════
+  const initPageTransitions = () => {
+    // Kept intentionally minimal: avoid inline transforms
+  };
+
+  // ═══════════════════════════════════════════════════════════════
+  // IMAGE LOADING EFFECTS
+  // ═══════════════════════════════════════════════════════════════
+  const initImageLoading = () => {
+    const images = document.querySelectorAll('img[loading="lazy"]');
+    
+    images.forEach((img) => {
+      if (img.complete) {
+        img.style.opacity = '1';
+        return;
+      }
+
+      img.style.opacity = '0';
+      img.style.transition = 'opacity 0.6s ease';
+
+      img.addEventListener('load', () => {
+        img.style.opacity = '1';
+      });
+
+      img.addEventListener('error', () => {
+        img.style.opacity = '0.3';
+      });
+    });
+  };
+
   // Scroll drift: subtle life while scrolling (icons/cards)
   const initDrift = () => {
     if (prefersReducedMotion) return;
@@ -216,9 +559,9 @@
         (isPanel ? 0.75 : 1) *
         (isBrand ? 0.85 : 1);
 
-      const ampY = (10 + ry * 18) * depth; // ~10..28px
-      const ampX = (4 + rx * 10) * depth;  // ~4..14px
-      const rot = (seeded(i + 3) - 0.5) * 2.4 * depth; // ~-1.2..1.2deg
+      const ampY = (6 + ry * 10) * depth; // ~6..16px
+      const ampX = (2 + rx * 5) * depth;  // ~2..7px
+      const rot = (seeded(i + 3) - 0.5) * 1.0 * depth; // ~-0.5..0.5deg
       const phase = seeded(i + 4) * Math.PI * 2;
       const sway = 0.25 + seeded(i + 5) * 0.55; // 0.25..0.80
       state.set(el, { x: 0, y: 0, r: 0, ampX, ampY, rot, phase, sway, depth });
@@ -237,7 +580,7 @@
       const vh = window.innerHeight || 800;
       const center = vh * 0.5;
       const v = clamp(velocity, -140, 140);
-      const velBoost = v * 0.14; // more present
+      const velBoost = v * 0.08; // subtle
       const t = (now || performance.now()) / 1000;
 
       // Camera sway for background (nebula + particles)
@@ -245,12 +588,12 @@
       const maxScroll = Math.max(1, docEl.scrollHeight - vh);
       const pos = clamp((lastY / maxScroll) * 2 - 1, -1, 1); // -1..1 through page
       const camVel = clamp(v, -120, 120);
-      const baseY = -pos * 18;
-      const baseX = Math.sin(pos * Math.PI) * 10;
-      const velY = camVel * 0.18;
-      const velX = camVel * -0.10;
-      const timeX = Math.sin(t * 0.65) * 2.2;
-      const timeY = Math.cos(t * 0.55) * 1.6;
+      const baseY = -pos * 12;
+      const baseX = Math.sin(pos * Math.PI) * 7;
+      const velY = camVel * 0.12;
+      const velX = camVel * -0.07;
+      const timeX = Math.sin(t * 0.6) * 1.6;
+      const timeY = Math.cos(t * 0.52) * 1.2;
 
       const camTargetX = baseX + velX + timeX;
       const camTargetY = baseY + velY + timeY;
@@ -326,10 +669,26 @@
     document.addEventListener('DOMContentLoaded', () => {
       initReveals();
       initDrift();
+      initScrollProgress();
+      initShootingStars();
+      initCountdowns();
+      initActiveNav();
+      initButtonEffects();
+      initSwipeGestures();
+      initPageTransitions();
+      initImageLoading();
     });
   } else {
     initReveals();
     initDrift();
+    initScrollProgress();
+    initShootingStars();
+    initCountdowns();
+    initActiveNav();
+    initButtonEffects();
+    initSwipeGestures();
+    initPageTransitions();
+    initImageLoading();
   }
 })();
 

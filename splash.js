@@ -103,32 +103,24 @@
 
   initMusic();
 
-  // Boot sequencing: UI first (fast), video only when first frame is ready
-  if (!prefersReducedMotion) {
-    Promise.race([
-      Promise.allSettled([waitForFonts(), sleep(140)]),
-      sleep(650),
-    ]).finally(markUiReady);
+  // Make UI available immediately to avoid delayed pop-in.
+  // Fonts/video can continue loading in the background.
+  markUiReady();
 
+  // Video only when first frame is ready (or after timeout).
+  if (!prefersReducedMotion) {
     Promise.race([
       waitForVideo(),
       sleep(2500),
     ]).finally(markVideoReady);
-  } else {
-    markUiReady();
-    markVideoReady();
-  }
 
-  // Occasional glitch effect on emphasis text (mysterious)
-  const ENABLE_GLITCH = false;
-  const emphasisLine = document.querySelector('.threshold-line--emphasis');
-  if (ENABLE_GLITCH && emphasisLine && !prefersReducedMotion) {
-    const triggerGlitch = () => {
-      emphasisLine.classList.add('glitch');
-      setTimeout(() => emphasisLine.classList.remove('glitch'), 100);
-      setTimeout(triggerGlitch, 7000 + Math.random() * 4000); // 7-11s
-    };
-    setTimeout(triggerGlitch, 6000); // First glitch after 6s
+    // Warm up font loading without blocking UI.
+    Promise.race([
+      waitForFonts(),
+      sleep(1800),
+    ]).catch(() => {});
+  } else {
+    markVideoReady();
   }
 
   const enter = () => {
@@ -155,20 +147,79 @@
   };
 
   if (passage) {
-    passage.addEventListener('click', enter);
+    passage.addEventListener('click', (e) => {
+      // If the button is inside a <form>, prevent immediate navigation.
+      // We'll navigate only after the dissolve transition.
+      if (e && typeof e.preventDefault === 'function') e.preventDefault();
+      enter();
+    });
 
-    // Allow Enter key as well
+    // Allow Enter key
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' && !passage.disabled) {
         enter();
       }
     });
   }
+})();
 
-  // Optional: Auto-skip after extended time (uncomment if desired)
-  // setTimeout(() => {
-  //   if (!passage.disabled) enter();
-  // }, 15000);
+// ═══════════════════════════════════════════════════════════════
+// CHARACTER INTERACTIVITY — Time Control Connection
+// ═══════════════════════════════════════════════════════════════
+
+(() => {
+  const character = document.querySelector('.time-controller');
+  const thresholdText = document.querySelector('.threshold-text');
+  const emphasisLine = document.querySelector('.threshold-line--emphasis');
+  
+  if (!character || !thresholdText) return;
+
+  // Parallax effect on mouse move
+  let mouseX = 0;
+  let mouseY = 0;
+  let currentX = 0;
+  let currentY = 0;
+
+  document.addEventListener('mousemove', (e) => {
+    mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+    mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+  });
+
+  const animate = () => {
+    currentX += (mouseX - currentX) * 0.1;
+    currentY += (mouseY - currentY) * 0.1;
+
+    if (window.innerWidth > 768) {
+      character.style.transform = `translateX(${currentX * 16}px) translateY(${currentY * 8}px)`;
+      thresholdText.style.transform = `translateX(${currentX * -15}px) translateY(${currentY * -8}px)`;
+    }
+
+    requestAnimationFrame(animate);
+  };
+
+  animate();
+
+  // Hover sync - hover character makes text glow
+  character.addEventListener('mouseenter', () => {
+    if (emphasisLine) {
+      emphasisLine.classList.add('glitch');
+    }
+  });
+
+  character.addEventListener('mouseleave', () => {
+    if (emphasisLine) {
+      emphasisLine.classList.remove('glitch');
+    }
+  });
+
+  // Hover text makes character glow stronger
+  thresholdText.addEventListener('mouseenter', () => {
+    character.style.filter = '';
+  });
+
+  thresholdText.addEventListener('mouseleave', () => {
+    character.style.filter = '';
+  });
 })();
 
 // ═══════════════════════════════════════════════════════════════

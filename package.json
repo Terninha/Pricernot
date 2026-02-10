@@ -1,0 +1,10 @@
+{
+  "name": "pricernot-site",
+  "private": true,
+  "scripts": {
+    "optimize:assets": "node ./tools/optimize-assets.mjs"
+  },
+  "devDependencies": {
+    "sharp": "^0.34.3"
+  }
+}
