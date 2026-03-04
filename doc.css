@@ -84,7 +84,9 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  /* scroll-behavior: smooth removed — iOS Safari applies smooth interpolation to ALL
+     scroll origins (finger swipes, programmatic, momentum) which creates a segmented,
+     non-native feeling.  Anchor smooth-scroll is handled by JS smoothScrollTo(). */
   scroll-padding-top: 90px;
 }
 
@@ -3129,14 +3131,18 @@ img[loading="lazy"]:not([src]) {
     box-shadow: none;
   }
 
-  /* Reduce expensive body pseudo-element complexity on mobile */
+  /* Flatten fixed pseudo-elements on mobile — position:fixed + animation + large
+     gradient = compositing pressure causing scroll-linked frame drops on iOS Safari.
+     Convert to position:absolute so they scroll with the page (no separate layer). */
   body::before {
     animation: none;
     opacity: 0.7;
+    position: absolute;
   }
 
   body::after {
     animation: none;
+    position: absolute;
   }
 
   /* Simplify hero image effects on touch */

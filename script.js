@@ -459,82 +459,13 @@
   };
 
   // ═══════════════════════════════════════════════════════════════
-  // MOBILE SWIPE GESTURES
+  // MOBILE SWIPE GESTURES  (disabled)
   // ═══════════════════════════════════════════════════════════════
-  const initSwipeGestures = () => {
-    if (!isTouchDevice) return;
-    const mobileQuery = window.matchMedia('(max-width: 720px)');
-    if (!mobileQuery.matches) return;
-
-    const sections = Array.from(document.querySelectorAll('.section[id]'));
-    if (sections.length === 0) return;
-
-    let touchStartY = 0;
-    let touchStartX = 0;
-    let isSwiping = false;
-
-    document.addEventListener('touchstart', (e) => {
-      touchStartY = e.touches[0].clientY;
-      touchStartX = e.touches[0].clientX;
-      isSwiping = true;
-    }, { passive: true });
-
-    document.addEventListener('touchmove', (e) => {
-      if (!isSwiping) return;
-
-      const touchEndY = e.touches[0].clientY;
-      const touchEndX = e.touches[0].clientX;
-      const deltaY = touchStartY - touchEndY;
-      const deltaX = Math.abs(touchStartX - touchEndX);
-
-      // Only handle vertical swipes (not horizontal)
-      if (deltaX > 50) {
-        isSwiping = false;
-        return;
-      }
-
-      // Swipe threshold
-      if (Math.abs(deltaY) > 100) {
-        const currentScrollY = window.scrollY;
-        const viewportHeight = window.innerHeight;
-
-        // Find current section
-        let currentIndex = -1;
-        sections.forEach((section, index) => {
-          const rect = section.getBoundingClientRect();
-          if (rect.top <= viewportHeight / 2 && rect.bottom > viewportHeight / 2) {
-            currentIndex = index;
-          }
-        });
-
-        if (currentIndex !== -1) {
-          let targetIndex = currentIndex;
-          if (deltaY > 0 && currentIndex < sections.length - 1) {
-            // Swipe up - next section
-            targetIndex = currentIndex + 1;
-          } else if (deltaY < 0 && currentIndex > 0) {
-            // Swipe down - previous section
-            targetIndex = currentIndex - 1;
-          }
-
-          if (targetIndex !== currentIndex) {
-            const targetSection = sections[targetIndex];
-            const header = document.querySelector('.site-header');
-            const headerOffset = header ? header.offsetHeight + 12 : 90;
-            const targetY = targetSection.getBoundingClientRect().top + currentScrollY - headerOffset;
-
-            smoothScrollTo(targetY, 800);
-          }
-        }
-
-        isSwiping = false;
-      }
-    }, { passive: true });
-
-    document.addEventListener('touchend', () => {
-      isSwiping = false;
-    }, { passive: true });
-  };
+  // Previously intercepted vertical swipes (>100 px) and hijacked
+  // native scroll to snap between sections via smoothScrollTo().
+  // This was the primary cause of "block-based" / segmented
+  // scrolling on mobile.  Native momentum scroll is now preserved.
+  const initSwipeGestures = () => { /* intentionally empty */ };
 
   // ═══════════════════════════════════════════════════════════════
   // PAGE TRANSITION EFFECTS
