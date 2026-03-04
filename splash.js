@@ -206,10 +206,18 @@
       thresholdText.style.transform = `translateX(${currentX * -15}px) translateY(${currentY * -8}px)`;
     }
 
-    requestAnimationFrame(animate);
+    // Only continue RAF loop on non-touch devices (saves battery on mobile)
+    const isTouchDevice = window.matchMedia('(pointer: coarse)').matches;
+    if (!isTouchDevice && !document.hidden) {
+      requestAnimationFrame(animate);
+    }
   };
 
-  animate();
+  // Only start parallax loop on non-touch devices
+  const isTouchDevice = window.matchMedia('(pointer: coarse)').matches;
+  if (!isTouchDevice) {
+    animate();
+  }
 
   // Hover sync - hover character makes text glow
   character.addEventListener('mouseenter', () => {

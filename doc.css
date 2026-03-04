@@ -126,7 +126,7 @@ html.from-splash body {
     opacity 1100ms cubic-bezier(0.16, 1, 0.3, 1),
     transform 1400ms cubic-bezier(0.16, 1, 0.3, 1);
   transition-delay: var(--reveal-delay, 0ms);
-  will-change: opacity, transform;
+  /* will-change removed — set via JS only when animating to reduce compositing layers */
 }
 
 .js.reveal-ready .reveal.is-visible {
@@ -151,7 +151,7 @@ html.from-splash body {
   --drift-r: 0deg;
   translate: var(--drift-x) var(--drift-y);
   rotate: var(--drift-r);
-  will-change: translate;
+  /* will-change set dynamically by JS only during active scrolling */
 }
 
 body {
@@ -169,11 +169,20 @@ body {
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
-  background-attachment: fixed;
+  /* Fixed attachment disabled by default (mobile-first). Enabled for desktop below. */
+  background-attachment: scroll;
   min-height: 100svh;
+  min-height: 100dvh; /* iOS Safari fix */
   line-height: 1.6;
   overflow-x: hidden;
   position: relative;
+}
+
+/* Enable fixed background only on non-touch desktop */
+@media (pointer: fine) and (min-width: 769px) {
+  body {
+    background-attachment: fixed;
+  }
 }
 
 /* ─── Cosmic Nebula Background Layer ─── */
@@ -192,6 +201,7 @@ body::before {
   translate: var(--cam-x) var(--cam-y);
   scale: 1;
   rotate: 0deg;
+  /* Use opacity-only animation to avoid expensive scale repaints on large area */
   animation: nebulaPulse 40s ease-in-out infinite alternate;
 }
 
@@ -200,12 +210,10 @@ body::before {
   0%,
   100% {
     opacity: 0.75;
-    scale: 1;
   }
 
   50% {
     opacity: 0.85;
-    scale: 1.02;
   }
 }
 
@@ -361,7 +369,6 @@ img {
   justify-content: space-between;
   padding: 1.2rem 1.5rem;
   transition: padding 400ms ease;
-  will-change: padding;
 }
 
 /* ─── Brand Identity (Minimal & Refined) ─── */
@@ -2593,6 +2600,7 @@ img[loading="lazy"]:not([src]) {
 
 .site-footer {
   padding: 3.5rem 0 4rem;
+  padding-bottom: calc(4rem + env(safe-area-inset-bottom, 0px));
   border-top: 1px solid rgba(124, 58, 237, 0.2);
   background: rgba(0, 0, 0, 0.6);
   position: relative;
@@ -2794,10 +2802,6 @@ img[loading="lazy"]:not([src]) {
   .hero {
     padding: 3rem 0 2.5rem;
     min-height: auto;
-  }
-
-  body {
-    background-attachment: scroll;
   }
 
   .nav-toggle {
@@ -3087,6 +3091,10 @@ img[loading="lazy"]:not([src]) {
     display: none !important;
   }
 
+  #particle-canvas {
+    display: none !important;
+  }
+
   .tilt-panel {
     transform: none !important;
   }
@@ -3106,6 +3114,41 @@ img[loading="lazy"]:not([src]) {
     box-shadow:
       0 8px 32px rgba(0, 0, 0, 0.4),
       inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  }
+
+  /* Reduce expensive body pseudo-element complexity on mobile */
+  body::before {
+    animation: none;
+    opacity: 0.7;
+  }
+
+  body::after {
+    animation: none;
+  }
+
+  /* Simplify hero image effects on touch */
+  .hero-image:hover {
+    filter: none;
+    transform: none;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6), 0 0 1px rgba(107, 79, 196, 0.1);
+  }
+
+  /* Disable holographic card shine animation on touch */
+  .holographic-card:hover .holographic-shine {
+    display: none;
+  }
+
+  /* Reduce card hover transform overhead */
+  .panel:hover,
+  .info-card:hover,
+  .social-card:hover,
+  .about-card:hover {
+    transform: none;
+  }
+
+  /* Disable shooting stars on mobile */
+  .stars-container {
+    display: none !important;
   }
 }
 
@@ -3188,12 +3231,14 @@ body:hover .mouse-glow {
 /* ─── 3D Tilt Effect Utilities ─── */
 .tilt-panel {
   transform-style: preserve-3d;
-  will-change: transform;
+  /* will-change set by JS on hover only */
 }
 
-/* ─── Button Breathing Animation ─── */
-.btn-enhanced {
-  animation: buttonBreath 4s ease-in-out infinite alternate;
+/* ─── Button Breathing Animation (desktop pointer devices only) ─── */
+@media (pointer: fine) {
+  .btn-enhanced {
+    animation: buttonBreath 4s ease-in-out infinite alternate;
+  }
 }
 
 @keyframes buttonBreath {

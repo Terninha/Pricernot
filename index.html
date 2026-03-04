@@ -3,19 +3,10 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Pricernot — VTuber • Streamer</title>
-    <meta name="description"
-        content="Olá eu sou Price! Vtuber e Streamer. Lives de Terça a Sexta às 19h (BRT) e Segunda live exclusiva para membros às 19h. Links oficiais e contato." />
-    <meta name="theme-color" content="#0b0f1a" />
 
-    <meta property="og:title" content="Pricernot" />
-    <meta property="og:description" content="Olá eu sou Price! Vtuber e Streamer — links oficiais, agenda e contato." />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="./img/price-og.jpg" />
-    <meta property="og:locale" content="pt_BR" />
-    <meta name="twitter:card" content="summary_large_image" />
-
+    <!-- CRITICAL: Redirect guard BEFORE any CSS/font downloads to avoid wasted bandwidth -->
     <script>
         (() => {
             const params = new URLSearchParams(window.location.search);
@@ -39,17 +30,29 @@
         })();
     </script>
 
+    <meta name="description"
+        content="Olá eu sou Price! Vtuber e Streamer. Lives de Terça a Sexta às 19h (BRT) e Segunda live exclusiva para membros às 19h. Links oficiais e contato." />
+    <meta name="theme-color" content="#0b0f1a" />
+
+    <meta property="og:title" content="Pricernot" />
+    <meta property="og:description" content="Olá eu sou Price! Vtuber e Streamer — links oficiais, agenda e contato." />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="./img/price-og.jpg" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta name="twitter:card" content="summary_large_image" />
+
     <script>
         document.documentElement.classList.add('js');
     </script>
 
-    <link rel="stylesheet" href="doc.css?v=3">
     <link rel="icon" type="image/x-icon" href="./img/coração112.png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
         rel="stylesheet">
+
+    <link rel="stylesheet" href="doc.css?v=4">
 </head>
 
 <body>

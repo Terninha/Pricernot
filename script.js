@@ -39,6 +39,12 @@
   // Detect touch devices to disable heavy hover/mouse-tracking effects
   const isTouchDevice = window.matchMedia('(pointer: coarse)').matches || ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
 
+  // Track document visibility to pause expensive animations when tab is hidden
+  let isDocumentVisible = !document.hidden;
+  document.addEventListener('visibilitychange', () => {
+    isDocumentVisible = !document.hidden;
+  });
+
   // Slow smooth scroll for in-page anchors
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const header = document.querySelector('.site-header');
@@ -198,7 +204,7 @@
   // SHOOTING STARS
   // ═══════════════════════════════════════════════════════════════
   const initShootingStars = () => {
-    if (prefersReducedMotion) return;
+    if (prefersReducedMotion || isTouchDevice) return;
 
     const container = document.querySelector('.stars-container');
     if (!container) return;
@@ -447,7 +453,9 @@
   // MOBILE SWIPE GESTURES
   // ═══════════════════════════════════════════════════════════════
   const initSwipeGestures = () => {
-    if (window.innerWidth > 720) return;
+    if (!isTouchDevice) return;
+    const mobileQuery = window.matchMedia('(max-width: 720px)');
+    if (!mobileQuery.matches) return;
 
     const sections = Array.from(document.querySelectorAll('.section[id]'));
     if (sections.length === 0) return;
@@ -553,7 +561,7 @@
 
   // Scroll drift: subtle life while scrolling (icons/cards)
   const initDrift = () => {
-    if (prefersReducedMotion) return;
+    if (prefersReducedMotion || isTouchDevice) return;
 
     const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
     const lerp = (a, b, t) => a + (b - a) * t;
@@ -813,6 +821,10 @@
       }
 
       const animateParticles = () => {
+        if (!isDocumentVisible) {
+          requestAnimationFrame(animateParticles);
+          return;
+        }
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         particles.forEach(p => {
           p.update();
