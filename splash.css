@@ -1395,6 +1395,11 @@ html.js body.is-ready .energy-flow {
     display: none;
   }
 
+  /* Hide energy beam artifact on mobile — renders as a thin line instead of a glow */
+  .energy-flow {
+    display: none !important;
+  }
+
   /* Reduce controller glow complexity */
   .time-controller::before {
     filter: blur(30px);

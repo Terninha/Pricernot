@@ -187,15 +187,24 @@
     const progressBar = document.querySelector('.scroll-progress');
     if (!progressBar) return;
 
+    let ticking = false;
     const updateProgress = () => {
       const docEl = document.documentElement;
       const scrollTop = window.scrollY || window.pageYOffset;
       const scrollHeight = docEl.scrollHeight - docEl.clientHeight;
       const progress = Math.min(Math.max((scrollTop / scrollHeight) * 100, 0), 100);
       progressBar.style.width = `${progress}%`;
+      ticking = false;
     };
 
-    window.addEventListener('scroll', updateProgress, { passive: true });
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(updateProgress);
+      }
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', updateProgress, { passive: true });
     updateProgress();
   };
