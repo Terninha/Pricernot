@@ -22,26 +22,17 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
-      - name: Checkout (with LFS)
+      - name: Checkout
         uses: actions/checkout@v4
-        with:
-          lfs: true
-          fetch-depth: 0
 
-      - name: Pull LFS objects
+      - name: Verify video assets
         shell: bash
         run: |
-          git lfs install --local
-          git lfs pull
-
-          ls -lh img/video-splash.mp4 img/video-splash.webm img/splash.webm
-
-          # Fail if any of these are still LFS pointer files (~130 bytes)
-          min_size=1000000
-          for f in img/video-splash.mp4 img/video-splash.webm img/splash.webm; do
+          ls -lh img/video-splash.mp4 img/video-splash.webm
+          for f in img/video-splash.mp4 img/video-splash.webm; do
             size=$(stat -c%s "$f")
-            if [ "$size" -lt "$min_size" ]; then
-              echo "ERROR: $f is too small ($size bytes). LFS content not present."
+            if [ "$size" -lt 1000000 ]; then
+              echo "ERROR: $f is too small ($size bytes)."
               exit 1
             fi
           done
